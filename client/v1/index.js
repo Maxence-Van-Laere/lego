@@ -476,6 +476,8 @@ const hasVeryOldItems = VINTED.some(item => new Date(item.published) < threeWeek
 console.log("Has very old items:", hasVeryOldItems);
 
 
+
+
 // 🎯 TODO 13: Find a specific item
 // 1. Find the item with the uuid `f2c5377c-84f9-571d-8712-98902dcbb913`
 // 2. Log the item
