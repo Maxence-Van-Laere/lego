@@ -61,12 +61,12 @@ console.log("Name of communities:",list_shopping_community, "Number of communiti
 // 2. Create a variable and assign it the list of sets by price from lowest to highest
 // 3. Log the variable
 
-function sortByPrice(deals, ascending=true){
+function sortByPrice(deals, ascending){
   return deals.sort((a,b)=>{
     return ascending ? a.price - b.price : b.price-a.price;
   });
 }
-const deals_sortedPrice=sortByPrice(deals);
+const deals_sortedPrice=sortByPrice(deals, true ); //TRUE pour prix ascendant, FALSE pour descendant
 console.log(deals_sortedPrice)
 
 // 🎯 TODO 5: Sort by date
@@ -74,9 +74,28 @@ console.log(deals_sortedPrice)
 // 2. Create a variable and assign it the list of deals by date from recent to old
 // 3. Log the variable
 
+function sortByDate(deals, ascending){
+  return deals.sort((a,b)=>{
+    const dateA= new Date(a.published);
+    const dateB= new Date(b.published);
+    return ascending ? dateA-dateB : dateB-dateA;
+  })
+}
+const deals_sortedDate = sortByDate(deals, true); // TRUE pour ascendant (du plus récent -> vieux) 
+console.log(deals_sortedDate);
+
+
 // 🎯 TODO 6: Filter a specific percentage discount range
 // 1. Filter the list of deals between 50% and 75%
 // 2. Log the list
+
+function sortByDiscount(deals, ascending){
+  return deals.sort((a,b)=> {
+    return ascending ? a.discount-b.discount : b.discount-a.discount;
+  })
+}
+const deals_sortedDiscount=sortByDiscount(deals,true);
+console.log(deals_sortedDiscount);
 
 // 🎯 TODO 7: Average percentage discount
 // 1. Determine the average percentage discount of the deals
