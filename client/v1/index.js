@@ -30,7 +30,7 @@ console.log(MY_FAVORITE_DEALERS[0]);
 // 1. Create a new variable and assign it the link of the lego set with the highest reduction I can find on these 2 websites
 // 2. Log the variable
 
-link_highest_reduction = "https://www.dealabs.com/bons-plans/selection-lego-chez-cultura-ex-lego-super-mario-71387-2979327"
+const link_highest_reduction = "https://www.dealabs.com/bons-plans/selection-lego-chez-cultura-ex-lego-super-mario-71387-2979327"
 
 /**
  * 🧱
@@ -45,13 +45,15 @@ link_highest_reduction = "https://www.dealabs.com/bons-plans/selection-lego-chez
 // 1. Create a variable and assign it the number of deals
 // 2. Log the variable
 
-number_deals= deals.length
+const number_deals= deals.length
 console.log(number_deals)
 
 // 🎯 TODO 3: Website name
 // 1. Create a variable and assign it the list of shopping community name only
 // 2. Log the variable
 // 3. Log how many shopping communities we have
+
+
 
 // 🎯 TODO 4: Sort by price
 // 1. Create a function to sort the deals by price
