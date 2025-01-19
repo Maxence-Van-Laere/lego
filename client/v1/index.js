@@ -89,17 +89,19 @@ console.log(deals_sortedDate);
 // 1. Filter the list of deals between 50% and 75%
 // 2. Log the list
 
-function sortByDiscount(deals, ascending){
-  return deals.sort((a,b)=> {
-    return ascending ? a.discount-b.discount : b.discount-a.discount;
-  })
+function sortByDiscount(deals, minDiscount, maxDiscount){
+  const filteredDeals = deals.filter(deal => deal.discount >= minDiscount && deal.discount <= maxDiscount);
+  return filteredDeals;
 }
-const deals_sortedDiscount=sortByDiscount(deals,true);
+const deals_sortedDiscount=sortByDiscount(deals, 50, 75);
 console.log(deals_sortedDiscount);
 
 // 🎯 TODO 7: Average percentage discount
 // 1. Determine the average percentage discount of the deals
 // 2. Log the average
+
+const average_discount= (deals.map(deals=>deals.discount).reduce((acc, discount)=>acc+discount, 0))/number_deals;
+console.log("Average discount:",average_discount);
 
 /**
  * 🏎
