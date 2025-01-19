@@ -476,6 +476,8 @@ const hasVeryOldItems = VINTED.some(item => new Date(item.published) < threeWeek
 console.log("Has very old items:", hasVeryOldItems);
 
 
+const hasVeryOldItems = VINTED.some(item => new Date(item.published) < threeWeeksAgo);
+console.log("Has very old items:", hasVeryOldItems);
 
 
 // 🎯 TODO 13: Find a specific item
