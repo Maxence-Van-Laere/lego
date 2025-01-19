@@ -45,6 +45,8 @@ link_highest_reduction = "https://www.dealabs.com/bons-plans/selection-lego-chez
 // 1. Create a variable and assign it the number of deals
 // 2. Log the variable
 
+number_deals= deals.length
+console.log(number_deals)
 
 // 🎯 TODO 3: Website name
 // 1. Create a variable and assign it the list of shopping community name only
