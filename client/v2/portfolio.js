@@ -146,14 +146,21 @@ const render = (deals, pagination) => {
  */
 selectShow.addEventListener('change', async (event) => {
   const deals = await fetchDeals(currentPagination.currentPage, parseInt(event.target.value));
+  setCurrentDeals(deals);
+  render(currentDeals, currentPagination);
+});
 
+/**
+ * Select the page to display
+ */
+selectPage.addEventListener('change', async (event) => {
+  const deals = await fetchDeals(parseInt(event.target.value), selectShow.value);
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 });
 
 document.addEventListener('DOMContentLoaded', async () => {
   const deals = await fetchDeals();
-
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 });
