@@ -81,6 +81,7 @@ const renderDeals = deals => {
         <span>${deal.id}</span>
         <a href="${deal.link}" target=_blank">${deal.title}</a>
         <span>${deal.price}</span>
+        <button class="save-favorite" data-id="${deal.uuid}">Save as favorite</button>
       </div>
     `;
     })
@@ -90,6 +91,14 @@ const renderDeals = deals => {
   fragment.appendChild(div);
   sectionDeals.innerHTML = '<h2>Deals</h2>';
   sectionDeals.appendChild(fragment);
+
+  // Add event listeners for "Save as favorite" buttons
+  document.querySelectorAll('.save-favorite').forEach(button => {
+    button.addEventListener('click', (event) => {
+      const dealId = event.target.getAttribute('data-id');
+      saveAsFavorite(dealId);
+    });
+  });
 };
 
 /**
@@ -135,6 +144,16 @@ const render = (deals, pagination) => {
   renderPagination(pagination);
   renderIndicators(pagination);
   renderLegoSetIds(deals)
+
+  // Add button to show favorite deals
+  const favoriteButton = document.createElement('button');
+  favoriteButton.innerText = 'Show favorite deals';
+  favoriteButton.addEventListener('click', () => {
+    const favoriteDeals = getFavoriteDeals();
+    const filteredDeals = deals.filter(deal => favoriteDeals.includes(deal.uuid));
+    renderDeals(filteredDeals);
+  });
+  sectionDeals.appendChild(favoriteButton);
 };
 
 /**
@@ -344,4 +363,27 @@ const renderSalesIndicators = (indicators) => {
   document.querySelector('#p25-price').innerText = indicators.p25Price.toFixed(2);
   document.querySelector('#p50-price').innerText = indicators.p50Price.toFixed(2);
   document.querySelector('#lifetime-value').innerText = indicators.lifetimeValue.toFixed(2);
+};
+
+/**
+ * Save a deal as favorite
+ * @param {String} dealId - ID of the deal to save as favorite
+ */
+const saveAsFavorite = (dealId) => {
+  const favoriteDeals = JSON.parse(localStorage.getItem('favoriteDeals')) || [];
+  if (!favoriteDeals.includes(dealId)) {
+    favoriteDeals.push(dealId);
+    localStorage.setItem('favoriteDeals', JSON.stringify(favoriteDeals));
+    alert('Deal saved as favorite!');
+  } else {
+    alert('Deal is already in favorites!');
+  }
+};
+
+/**
+ * Get favorite deals from localStorage
+ * @returns {Array} list of favorite deal IDs
+ */
+const getFavoriteDeals = () => {
+  return JSON.parse(localStorage.getItem('favoriteDeals')) || [];
 };
