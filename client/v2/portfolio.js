@@ -79,7 +79,7 @@ const renderDeals = deals => {
       return `
       <div class="deal" id=${deal.uuid}>
         <span>${deal.id}</span>
-        <a href="${deal.link}">${deal.title}</a>
+        <a href="${deal.link}" target=_blank">${deal.title}</a>
         <span>${deal.price}</span>
       </div>
     `;
@@ -164,3 +164,184 @@ document.addEventListener('DOMContentLoaded', async () => {
   setCurrentDeals(deals);
   render(currentDeals, currentPagination);
 });
+
+/**
+ * Filter deals by best discount
+ */
+const filterBestDiscount = deals => {
+  return deals.filter(deal => deal.discount > 50);
+};
+
+/**
+ * Filter deals by most commented
+ */
+const filterMostCommented = deals => {
+  return deals.filter(deal => deal.comments > 15);
+};
+
+/**
+ * Filter deals by hot deals
+ */
+const filterHotDeals = deals => {
+  return deals.filter(deal => deal.temperature > 100);
+};
+
+// Add event listeners for filter buttons
+document.querySelector('#filter-best-discount').addEventListener('click', () => {
+  const filteredDeals = filterBestDiscount(currentDeals);
+  render(filteredDeals, currentPagination);
+});
+
+document.querySelector('#filter-most-commented').addEventListener('click', () => {
+  const filteredDeals = filterMostCommented(currentDeals);
+  render(filteredDeals, currentPagination);
+});
+
+document.querySelector('#filter-hot-deals').addEventListener('click', () => {
+  const filteredDeals = filterHotDeals(currentDeals);
+  render(filteredDeals, currentPagination);
+});
+
+
+/**
+ * Sort deals by price
+ * @param {Array} deals - list of deals
+ * @param {String} order - 'asc' for ascending, 'desc' for descending
+ * @returns {Array} sorted deals
+ */
+const sortByPrice = (deals, order) => {
+  return deals.sort((a, b) => order === 'asc' ? a.price - b.price : b.price - a.price);
+};
+
+/**
+ * Sort deals by date
+ * @param {Array} deals - list of deals
+ * @param {String} order - 'asc' for ascending, 'desc' for descending
+ * @returns {Array} sorted deals
+ */
+const sortByDate = (deals, order) => {
+  return deals.sort((a, b) => order === 'asc' ? new Date(a.published) - new Date(b.published) : new Date(b.published) - new Date(a.published));
+};
+
+/**
+ * Fetch Vinted sales for a given lego set id
+ * @param {String} id - lego set id
+ * @returns {Array} list of sales
+ */
+const fetchVintedSales = async (id) => {
+  try {
+    const response = await fetch(`https://lego-api-blue.vercel.app/sales?id=${id}`);
+    const body = await response.json();
+
+    if (body.success !== true) {
+      console.error(body);
+      return [];
+    }
+
+    return body.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+// Add event listeners for sort options
+document.querySelector('#sort-select').addEventListener('change', (event) => {
+  let sortedDeals;
+  switch (event.target.value) {
+    case 'price-asc':
+      sortedDeals = sortByPrice(currentDeals, 'asc');
+      break;
+    case 'price-desc':
+      sortedDeals = sortByPrice(currentDeals, 'desc');
+      break;
+    case 'date-asc':
+      sortedDeals = sortByDate(currentDeals, 'asc');
+      break;
+    case 'date-desc':
+      sortedDeals = sortByDate(currentDeals, 'desc');
+      break;
+    default:
+      sortedDeals = currentDeals;
+  }
+  render(sortedDeals, currentPagination);
+});
+
+// Add event listener for lego set id selection
+document.querySelector('#lego-set-id-select').addEventListener('change', async (event) => {
+  const sales = await fetchVintedSales(event.target.value);
+  renderSales(sales);
+});
+
+/**
+ * Render list of sales
+ * @param {Array} sales - list of sales
+ */
+const renderSales = (sales) => {
+  const fragment = document.createDocumentFragment();
+  const div = document.createElement('div');
+  const template = sales
+    .map(sale => {
+      return `
+      <div class="sale" id=${sale.uuid}>
+        <span>${sale.id}</span>
+        <a href="${sale.link}">${sale.title}</a>
+        <span>${sale.price}</span>
+      </div>
+    `;
+    })
+    .join('');
+
+  div.innerHTML = template;
+  fragment.appendChild(div);
+  sectionDeals.innerHTML = '<h2>Sales</h2>';
+  sectionDeals.appendChild(fragment);
+};
+
+
+/**
+ * Calculate specific indicators for a given set of sales
+ * @param {Array} sales - list of sales
+ * @returns {Object} indicators
+ */
+const calculateIndicators = (sales) => {
+  const prices = sales.map(sale => parseFloat(sale.price));
+  const totalDeals = sales.length;
+  const averagePrice = prices.reduce((acc, price) => acc + price, 0) / prices.length;
+  const sortedPrices = prices.sort((a, b) => a - b);
+  const p5Price = sortedPrices[Math.floor(prices.length * 0.05)];
+  const p25Price = sortedPrices[Math.floor(prices.length * 0.25)];
+  const p50Price = sortedPrices[Math.floor(prices.length * 0.50)];
+  const lifetimeValue = (new Date() - new Date(sales[0].published)) / (1000 * 60 * 60 * 24); // in days
+
+  return {
+    totalDeals,
+    averagePrice,
+    p5Price,
+    p25Price,
+    p50Price,
+    lifetimeValue
+  };
+};
+
+// Add event listener for lego set id selection
+document.querySelector('#lego-set-id-select').addEventListener('change', (event) => {
+  const selectedSetId = event.target.value;
+  const filteredDeals = currentDeals.filter(deal => deal.id === selectedSetId);
+  renderDeals(filteredDeals);
+  const indicators = calculateIndicators(filteredDeals);
+  renderSalesIndicators(indicators);
+});
+
+/**
+ * Render specific indicators
+ * @param {Object} indicators - calculated indicators
+ */
+const renderSalesIndicators = (indicators) => {
+  document.querySelector('#nbDeals').innerText = indicators.totalDeals;
+  document.querySelector('#average-price').innerText = indicators.averagePrice.toFixed(2);
+  document.querySelector('#p5-price').innerText = indicators.p5Price.toFixed(2);
+  document.querySelector('#p25-price').innerText = indicators.p25Price.toFixed(2);
+  document.querySelector('#p50-price').innerText = indicators.p50Price.toFixed(2);
+  document.querySelector('#lifetime-value').innerText = indicators.lifetimeValue.toFixed(2);
+};
