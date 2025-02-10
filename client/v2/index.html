@@ -20,17 +20,17 @@
         <select name="page" id="page-select"> </select>
       </div>
       <div id="filters">
-        <span>By best discount</span>
-        <span>By most commented</span>
-        <span>By hot deals</span>
+        <button id="filter-best-discount">By best discount</button>
+        <button id="filter-most-commented">By most commented</button>
+        <button id="filter-hot-deals">By hot deals</button>
       </div>
       <div id="sort">
         <label for="sort-select">Sort:</label>
         <select name="sort" id="sort-select">
-          <option value="price-asc">Cheaper</option>
-          <option value="price-desc">Expensive</option>
-          <option value="date-asc">Recently published</option>
-          <option value="date-desc">Anciently published</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="date-asc">Date: Old to New</option>
+          <option value="date-desc">Date: New to Old</option>
         </select>
       </div>
     </section>
@@ -44,28 +44,34 @@
     <section id="indicators">
       <h2>Indicators</h2>
       <div>
-        <span>Number of deals</span>
+        <span>Number of deals:</span>
         <span id="nbDeals">0</span>
       </div>
+      <!--
       <div>
-        <span>Number of sales</span>
+        <span>Number of sales: </span>
         <span id="nbSales">0</span>
       </div>
+      -->
       <div>
-        <span>p5 sales price value</span>
-        <span>0</span>
+        <span>Average Price:</span>
+        <span id="average-price">0</span>
       </div>
       <div>
-        <span>p25 sales price value</span>
-        <span>0</span>
+        <span>p5 sales price value:</span>
+        <span id = "p5-price">0</span>
       </div>
       <div>
-        <span>p50 sales price value</span>
-        <span>0</span>
+        <span>p25 sales price value:</span>
+        <span  id = "p25-price">0</span>
       </div>
       <div>
-        <span>Lifetime value</span>
-        <span>10 days</span>
+        <span>p50 sales price value:</span>
+        <span id = "p50-price">0</span>
+      </div>
+      <div>
+        <span>Lifetime value:</span>
+        <span id ="lifetime-value">0</span>
       </div>
     </section>
     <section id="deals"></section>
