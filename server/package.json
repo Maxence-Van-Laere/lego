@@ -9,7 +9,9 @@
     "node-fetch": "^2.7.0",
     "parse-domain": "^8.2.2",
     "require-all": "^3.0.0",
-    "uuid": "^11.0.5"
+    "uuid": "^11.0.5",
+    "p-queue": "^7.0.0",
+    "delay": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
