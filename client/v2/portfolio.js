@@ -51,19 +51,21 @@ const setCurrentDeals = ({result, meta}) => {
 const fetchDeals = async (page = 1, size = 6) => {
   try {
     const response = await fetch(
-      `https://api-webdesign-mvl.vercel.app/`
+      `https://api-webdesign-mvl.vercel.app/deals`
     );
     const body = await response.json();
 
-    if (body.success !== true) {
-      console.error(body);
-      return {currentDeals, currentPagination};
+    console.log('API Response:', body); // Log pour vérifier la réponse de l'API
+
+    if (!body || !body.results) { // Vérifiez si la réponse contient les données attendues
+      console.error('Invalid API response:', body);
+      return { result: [], meta: {} }; // Retournez des valeurs par défaut
     }
 
-    return body.data;
+    return { result: body.results, meta: { currentPage: page, pageCount: Math.ceil(body.total / size), count: body.total } };
   } catch (error) {
     console.error(error);
-    return {currentDeals, currentPagination};
+    return { result: [], meta: {} }; // Retournez des valeurs par défaut en cas d'erreur
   }
 };
 

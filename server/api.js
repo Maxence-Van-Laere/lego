@@ -10,7 +10,21 @@ const app = express();
 module.exports = app;
 
 app.use(require('body-parser').json());
-app.use(cors());
+app.use(cors({
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:3000', // Origine pour le développement local
+      'https://v2-lego-webdesign-mvl.vercel.app/' // Origine pour la production
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true); // Autoriser l'origine
+    } else {
+      callback(new Error('Not allowed by CORS')); // Bloquer l'origine
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes HTTP autorisées
+  allowedHeaders: ['Content-Type', 'Authorization'], // En-têtes autorisés
+}));
 app.use(helmet());
 
 app.options('*', cors());
