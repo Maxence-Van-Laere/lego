@@ -68,6 +68,8 @@ Lors de l'exécution de l'application, une erreur liée à la politique CORS (Cr
 Access to fetch at 'https://api-webdesign-mvl.vercel.app/deals' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
 ```
 
+![Erreur CORS](./images/cors-error.png)
+
 Cela signifie que le serveur API n'autorise pas les requêtes provenant de l'origine `http://localhost:3000`.
 
 ### Vérification du bon fonctionnement de l'API
@@ -79,6 +81,8 @@ Malgré l'erreur CORS, une vérification directe de l'API montre qu'elle fonctio
   "ack": true
 }
 ```
+
+![Réponse API](./images/api-response.png)
 
 ## 📝 Licence
 
