@@ -51,7 +51,7 @@ const setCurrentDeals = ({result, meta}) => {
 const fetchDeals = async (page = 1, size = 6) => {
   try {
     const response = await fetch(
-      `https://lego-api-blue.vercel.app/deals?page=${page}&size=${size}`
+      `https://api-webdesign-5ixak8pd9-maxence-van-laeres-projects.vercel.app`
     );
     const body = await response.json();
 
