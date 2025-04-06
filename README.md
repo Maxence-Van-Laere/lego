@@ -62,7 +62,7 @@ With [inception](https://github.com/92bondstreet/inception?tab=readme-ov-file#%E
 
 ### Erreur CORS dans la console
 
-Lors de l'exécution de l'application, une erreur liée à la politique CORS (Cross-Origin Resource Sharing) a été rencontrée. Voici le message d'erreur affiché dans la console :
+Lors de l'exécution de l'application, une erreur liée à la politique CORS (Cross-Origin Resource Sharing) a été rencontrée, que ça soit lors de l'execution local ou en production. Voici le message d'erreur affiché dans la console :
 
 ```
 Access to fetch at 'https://api-webdesign-mvl.vercel.app/deals' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
