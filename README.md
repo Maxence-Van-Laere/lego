@@ -58,6 +58,28 @@ With [inception](https://github.com/92bondstreet/inception?tab=readme-ov-file#%E
 | 7 | [Deploy in production with Vercel](./workshops/7-deploy.md) | Mar 2025
 | n | Design an effective experience | Mar 2025
 
+## 🐞 Problèmes rencontrés
+
+### Erreur CORS dans la console
+
+Lors de l'exécution de l'application, une erreur liée à la politique CORS (Cross-Origin Resource Sharing) a été rencontrée. Voici le message d'erreur affiché dans la console :
+
+```
+Access to fetch at 'https://api-webdesign-mvl.vercel.app/deals' from origin 'http://localhost:3000' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+Cela signifie que le serveur API n'autorise pas les requêtes provenant de l'origine `http://localhost:3000`.
+
+### Vérification du bon fonctionnement de l'API
+
+Malgré l'erreur CORS, une vérification directe de l'API montre qu'elle fonctionne correctement. Par exemple, une requête GET sur l'endpoint `https://api-webdesign-mvl.vercel.app/deals` retourne la réponse suivante :
+
+```json
+{
+  "ack": true
+}
+```
+
 ## 📝 Licence
 
 [Uncopyrighted](http://zenhabits.net/uncopyright/)
