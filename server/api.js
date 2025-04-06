@@ -38,22 +38,113 @@ app.get('/', (request, response) => {
   response.send({ 'ack': true });
 });
 
-app.get('/deals/:id', async (request, response) => {
+app.get('/deals/search', async (request, response) => {
+  const { limit = 12, price, date, filterBy } = request.query; 
+
+  try {
+    const deals = db.collection('deals');
+    const query = {};
+    const options = {
+      limit: parseInt(limit, 10), 
+    };
+
+    // Apply filters
+    if (price) {
+      query.price = { $lte: parseFloat(price) }; // Ensure price is compared as a number
+    }
+    if (date) {
+      query.published = { $lte: new Date(date).getTime() / 1000 }; // Convert date to UNIX timestamp
+    }
+
+    // Apply sorting only if filterBy is provided
+    if (filterBy === 'best-discount') {
+      options.sort = { discount: -1 }; // Sort by discount in descending order
+    } else if (filterBy === 'most-commented') {
+      options.sort = { comments: -1 }; // Sort by comments in descending order
+    }
+
+    const results = await deals.find(query, options).toArray();
+    const total = results.length;
+
+    response.json({
+      limit: parseInt(limit, 10),
+      total,
+      results,
+    });
+  } catch (error) {
+    console.error('Error searching deals:', error);
+    response.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deals/:id?', async (request, response) => {
   const dealId = request.params.id;
 
   try {
     const deals = db.collection('deals');
 
-    // Convert dealId to ObjectId and query using `_id`
-    const deal = await deals.findOne({ _id: new ObjectId(dealId) });
+    if (dealId) {
+      // Validate if dealId is a valid ObjectId
+      if (!ObjectId.isValid(dealId)) {
+        return response.status(400).send({ error: 'Invalid ID format' });
+      }
 
-    if (deal) {
-      response.json(deal);
+      // Convert dealId to ObjectId and query using `_id`
+      const deal = await deals.findOne({ _id: new ObjectId(dealId) });
+
+      if (deal) {
+        return response.json(deal);
+      } else {
+        return response.status(404).send({ error: 'Deal not found' });
+      }
     } else {
-      response.status(404).send({ error: 'Deal not found' });
+      // If no id is provided, return all deals
+      const allDeals = await deals.find().toArray();
+      return response.json(allDeals);
     }
   } catch (error) {
-    console.error('Error fetching deal:', error);
+    console.error('Error fetching deal(s):', error);
+    response.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/sales/search', async (request, response) => {
+  const { limit = 12, legoSetId, price } = request.query;
+
+  try {
+    const sales = db.collection('sales');
+    const query = {};
+
+    // Apply filters
+    if (legoSetId) {
+      query.legoSetId = legoSetId;
+    }
+    if (price) {
+      query.price = { $lte: parseFloat(price) }; // Ensure price is compared as a float
+    }
+
+    const results = await sales
+      .aggregate([
+        {
+          $addFields: {
+            price: { $toDouble: "$price" }, // Convert price to float for comparison
+          },
+        },
+        { $match: query },
+        { $sort: { price: 1 } },
+        { $limit: parseInt(limit, 10) }, // Limit the number of results
+      ])
+      .toArray();
+
+    const total = results.length;
+
+    response.json({
+      limit: parseInt(limit, 10),
+      total,
+      results,
+    });
+  } catch (error) {
+    console.error('Error searching sales:', error);
     response.status(500).send({ error: 'Internal Server Error' });
   }
 });
